@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using OSP.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<OSPContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OSPContext") ?? throw new InvalidOperationException("Connection string 'OSPContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
