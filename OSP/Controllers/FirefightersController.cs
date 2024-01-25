@@ -56,7 +56,7 @@ namespace OSP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname,DataS,Driver")] Firefighter firefighter)
+        public async Task<IActionResult> Create([Bind("Id,Name,Surname,DataS,Driver,Commander")] Firefighter firefighter)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace OSP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,DataS,Driver")] Firefighter firefighter)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,DataS,Driver,Commander")] Firefighter firefighter)
         {
             if (id != firefighter.Id)
             {

@@ -10,94 +10,100 @@ using OSP.Models;
 
 namespace OSP.Controllers
 {
-    public class CarInActionsController : Controller
+    public class CrewsController : Controller
     {
         private readonly OSPContext _context;
 
-        public CarInActionsController(OSPContext context)
+        public CrewsController(OSPContext context)
         {
             _context = context;
         }
 
-        // GET: CarInActions
+        // GET: Crews
         public async Task<IActionResult> Index()
         {
-            var oSPContext = _context.CarInAction.Include(c => c.Car).Include(c => c.Incident);
+            var oSPContext = _context.Crew.Include(c => c.Driver).Include(c => c.Incident);
             return View(await oSPContext.ToListAsync());
         }
 
-        // GET: CarInActions/Details/5
+        // GET: Crews/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.CarInAction == null)
+            if (id == null || _context.Crew == null)
             {
                 return NotFound();
             }
 
-            var carInAction = await _context.CarInAction
-                .Include(c => c.Car)
+            var crew = await _context.Crew
+                .Include(c => c.Driver)
                 .Include(c => c.Incident)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carInAction == null)
+            if (crew == null)
             {
                 return NotFound();
             }
 
-            return View(carInAction);
+            return View(crew);
         }
 
-        // GET: CarInActions/Create
+        // GET: Crews/Create
         public IActionResult Create()
         {
-            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model");
-            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription");
+
+            ViewData["DriverId"] = new SelectList(_context.Firefighter, "Id", "Surname");
+            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "IN");
+            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Name");
+            ViewData["FirefighterId"] = new SelectList(_context.Firefighter, "Id", "Name");
+
             return View();
         }
 
-        // POST: CarInActions/Create
+        // POST: Crews/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IncidentId,CarId")] CarInAction carInAction)
+        public async Task<IActionResult> Create([Bind("Id,DataS,CarId,FirefighterId,DriverId,IncidentId")] Crew crew)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(carInAction);
+                _context.Add(crew);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model", carInAction.CarId);
-            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", carInAction.IncidentId);
-            return View(carInAction);
+            ViewData["DriverId"] = new SelectList(_context.Firefighter, "Id", "Surname", crew.DriverId);
+            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "IN", crew.IncidentId);
+            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Name",crew.CarId);
+            ViewData["FirefighterId"] = new SelectList(_context.Firefighter, "Id", "Surname", crew.FirefighterId);
+            return View(crew);
         }
 
-        // GET: CarInActions/Edit/5
+        // GET: Crews/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.CarInAction == null)
+            if (id == null || _context.Crew == null)
             {
                 return NotFound();
             }
 
-            var carInAction = await _context.CarInAction.FindAsync(id);
-            if (carInAction == null)
+            var crew = await _context.Crew.FindAsync(id);
+            if (crew == null)
             {
                 return NotFound();
             }
-            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model", carInAction.CarId);
-            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", carInAction.IncidentId);
-            return View(carInAction);
+            ViewData["DriverId"] = new SelectList(_context.Firefighter, "Id", "Name", crew.DriverId);
+            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", crew.IncidentId);
+            return View(crew);
         }
 
-        // POST: CarInActions/Edit/5
+        // POST: Crews/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IncidentId,CarId")] CarInAction carInAction)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DataS,CarId,FirefighterId,DriverId,IncidentId")] Crew crew)
         {
-            if (id != carInAction.Id)
+            if (id != crew.Id)
             {
                 return NotFound();
             }
@@ -106,12 +112,12 @@ namespace OSP.Controllers
             {
                 try
                 {
-                    _context.Update(carInAction);
+                    _context.Update(crew);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarInActionExists(carInAction.Id))
+                    if (!CrewExists(crew.Id))
                     {
                         return NotFound();
                     }
@@ -122,53 +128,53 @@ namespace OSP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model", carInAction.CarId);
-            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", carInAction.IncidentId);
-            return View(carInAction);
+            ViewData["DriverId"] = new SelectList(_context.Firefighter, "Id", "Name", crew.DriverId);
+            ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", crew.IncidentId);
+            return View(crew);
         }
 
-        // GET: CarInActions/Delete/5
+        // GET: Crews/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.CarInAction == null)
+            if (id == null || _context.Crew == null)
             {
                 return NotFound();
             }
 
-            var carInAction = await _context.CarInAction
-                .Include(c => c.Car)
+            var crew = await _context.Crew
+                .Include(c => c.Driver)
                 .Include(c => c.Incident)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carInAction == null)
+            if (crew == null)
             {
                 return NotFound();
             }
 
-            return View(carInAction);
+            return View(crew);
         }
 
-        // POST: CarInActions/Delete/5
+        // POST: Crews/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.CarInAction == null)
+            if (_context.Crew == null)
             {
-                return Problem("Entity set 'OSPContext.CarInAction'  is null.");
+                return Problem("Entity set 'OSPContext.Crew'  is null.");
             }
-            var carInAction = await _context.CarInAction.FindAsync(id);
-            if (carInAction != null)
+            var crew = await _context.Crew.FindAsync(id);
+            if (crew != null)
             {
-                _context.CarInAction.Remove(carInAction);
+                _context.Crew.Remove(crew);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarInActionExists(int id)
+        private bool CrewExists(int id)
         {
-          return (_context.CarInAction?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Crew?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

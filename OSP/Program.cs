@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OSP.Data;
+using OSP.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<OSPContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("OSPContext") ?? throw new InvalidOperationException("Connection string 'OSPContext' not found.")));
@@ -10,6 +11,12 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -27,6 +34,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Incidents}/{action=Index}/{id?}");
 
 app.Run();

@@ -11,16 +11,21 @@ namespace OSP.Models
         public int Id { get; set; }
         [Required]
         [StringLength (250)]
-        public string Discription { get; set; }
+        public string? Discription { get; set; }
 
         [Required]
         [StringLength(60)]
-        public string PlaceName { get; set; }
+        public string? PlaceName { get; set; }
 
         [Display(Name = "Data zdarzenia")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}")]
         public DateTime? DataS { get; set; }
+
+        [Display(Name ="Ekipa")]
+        public Crew? Crew { get; set; }
+
+        public string IN => PlaceName + " " + DataS;
 
     }
 }

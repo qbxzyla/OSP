@@ -1,4 +1,4 @@
-﻿@model OSP.Models.Firefighter
+﻿@model OSP.Models.Crew
 
 @{
     ViewData["Title"] = "Details";
@@ -7,21 +7,9 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Firefighter</h4>
+    <h4>Crew</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Surname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DataS)
         </dt>
@@ -29,16 +17,28 @@
             @Html.DisplayFor(model => model.DataS)
         </dd>
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CarId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CarId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FirefighterId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FirefighterId)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Driver)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Driver)
+            @Html.DisplayFor(model => model.Driver.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Commander)
+            @Html.DisplayNameFor(model => model.Incident)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Commander)
+            @Html.DisplayFor(model => model.Incident.Discription)
         </dd>
     </dl>
 </div>

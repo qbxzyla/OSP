@@ -12,12 +12,12 @@ namespace OSP.Models
         [Required]
         [StringLength(50)]
         [Display(Name = "Imie")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         [StringLength(50)]
         [Display(Name = "Nazwisko")]
-        public string Surname { get; set; }
+        public string? Surname { get; set; }
 
         [Display(Name = "Ważność badań")]
         [DataType(DataType.Date)]
@@ -26,6 +26,8 @@ namespace OSP.Models
 
         [Display (Name = "Kierowca")]
         public bool Driver { get; set; }
+        [Display (Name = "Dowódca")]
+        public bool Commander { get; set; }
 
 
     }

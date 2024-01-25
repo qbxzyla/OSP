@@ -22,7 +22,7 @@ namespace OSP.Controllers
         // GET: Drives
         public async Task<IActionResult> Index()
         {
-            var oSPContext = _context.Drive.Include(d => d.Firefighter).Include(d => d.Incident);
+            var oSPContext = _context.Drive.Include(d => d.Car).Include(d => d.Incident);
             return View(await oSPContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace OSP.Controllers
             }
 
             var drive = await _context.Drive
-                .Include(d => d.Firefighter)
+                .Include(d => d.Car)
                 .Include(d => d.Incident)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (drive == null)
@@ -49,7 +49,7 @@ namespace OSP.Controllers
         // GET: Drives/Create
         public IActionResult Create()
         {
-            ViewData["FirefighterId"] = new SelectList(_context.Firefighter, "Id", "Name");
+            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model");
             ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription");
             return View();
         }
@@ -59,7 +59,7 @@ namespace OSP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirefighterId,IncidentId")] Drive drive)
+        public async Task<IActionResult> Create([Bind("Id,IncidentId,CarId")] Drive drive)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace OSP.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FirefighterId"] = new SelectList(_context.Firefighter, "Id", "Name", drive.FirefighterId);
+            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model", drive.CarId);
             ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", drive.IncidentId);
             return View(drive);
         }
@@ -85,7 +85,7 @@ namespace OSP.Controllers
             {
                 return NotFound();
             }
-            ViewData["FirefighterId"] = new SelectList(_context.Firefighter, "Id", "Name", drive.FirefighterId);
+            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model", drive.CarId);
             ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", drive.IncidentId);
             return View(drive);
         }
@@ -95,7 +95,7 @@ namespace OSP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirefighterId,IncidentId")] Drive drive)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IncidentId,CarId")] Drive drive)
         {
             if (id != drive.Id)
             {
@@ -122,7 +122,7 @@ namespace OSP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FirefighterId"] = new SelectList(_context.Firefighter, "Id", "Name", drive.FirefighterId);
+            ViewData["CarId"] = new SelectList(_context.Car, "Id", "Model", drive.CarId);
             ViewData["IncidentId"] = new SelectList(_context.Incident, "Id", "Discription", drive.IncidentId);
             return View(drive);
         }
@@ -136,7 +136,7 @@ namespace OSP.Controllers
             }
 
             var drive = await _context.Drive
-                .Include(d => d.Firefighter)
+                .Include(d => d.Car)
                 .Include(d => d.Incident)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (drive == null)

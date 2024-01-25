@@ -12,8 +12,8 @@ using OSP.Data;
 namespace OSP.Migrations
 {
     [DbContext(typeof(OSPContext))]
-    [Migration("20240124003821_AddCarsandCarsInAction")]
-    partial class AddCarsandCarsInAction
+    [Migration("20240125015508_newInit")]
+    partial class newInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,9 @@ namespace OSP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("CrewId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Liters")
                         .HasColumnType("int");
 
@@ -47,10 +50,34 @@ namespace OSP.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CrewId");
+
                     b.ToTable("Car");
                 });
 
-            modelBuilder.Entity("OSP.Models.CarInAction", b =>
+            modelBuilder.Entity("OSP.Models.Crew", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DataS")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FirefighterId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Crews");
+                });
+
+            modelBuilder.Entity("OSP.Models.Drive", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,30 +97,7 @@ namespace OSP.Migrations
 
                     b.HasIndex("IncidentId");
 
-                    b.ToTable("CarInAction");
-                });
-
-            modelBuilder.Entity("OSP.Models.Drive", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("FirefighterId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IncidentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FirefighterId");
-
-                    b.HasIndex("IncidentId");
-
-                    b.ToTable("Drive");
+                    b.ToTable("Drives");
                 });
 
             modelBuilder.Entity("OSP.Models.Firefighter", b =>
@@ -104,11 +108,14 @@ namespace OSP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<bool>("Commander")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("CrewId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("DataS")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("DriveId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("Driver")
                         .HasColumnType("bit");
@@ -125,7 +132,7 @@ namespace OSP.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DriveId");
+                    b.HasIndex("CrewId");
 
                     b.ToTable("Firefighter");
                 });
@@ -146,9 +153,6 @@ namespace OSP.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int?>("DriveId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PlaceName")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -156,12 +160,17 @@ namespace OSP.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DriveId");
-
                     b.ToTable("Incidents");
                 });
 
-            modelBuilder.Entity("OSP.Models.CarInAction", b =>
+            modelBuilder.Entity("OSP.Models.Car", b =>
+                {
+                    b.HasOne("OSP.Models.Crew", null)
+                        .WithMany("Cars")
+                        .HasForeignKey("CrewId");
+                });
+
+            modelBuilder.Entity("OSP.Models.Drive", b =>
                 {
                     b.HasOne("OSP.Models.Car", "Car")
                         .WithMany()
@@ -180,44 +189,18 @@ namespace OSP.Migrations
                     b.Navigation("Incident");
                 });
 
-            modelBuilder.Entity("OSP.Models.Drive", b =>
-                {
-                    b.HasOne("OSP.Models.Firefighter", "Firefighter")
-                        .WithMany()
-                        .HasForeignKey("FirefighterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OSP.Models.Incident", "Incident")
-                        .WithMany()
-                        .HasForeignKey("IncidentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Firefighter");
-
-                    b.Navigation("Incident");
-                });
-
             modelBuilder.Entity("OSP.Models.Firefighter", b =>
                 {
-                    b.HasOne("OSP.Models.Drive", null)
+                    b.HasOne("OSP.Models.Crew", null)
                         .WithMany("Firefighters")
-                        .HasForeignKey("DriveId");
+                        .HasForeignKey("CrewId");
                 });
 
-            modelBuilder.Entity("OSP.Models.Incident", b =>
+            modelBuilder.Entity("OSP.Models.Crew", b =>
                 {
-                    b.HasOne("OSP.Models.Drive", null)
-                        .WithMany("Incidents")
-                        .HasForeignKey("DriveId");
-                });
+                    b.Navigation("Cars");
 
-            modelBuilder.Entity("OSP.Models.Drive", b =>
-                {
                     b.Navigation("Firefighters");
-
-                    b.Navigation("Incidents");
                 });
 #pragma warning restore 612, 618
         }

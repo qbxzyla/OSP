@@ -14,7 +14,7 @@ namespace OSP.Data
         {
         }
 
-        public DbSet<OSP.Models.Firefighter> Firefighter { get; set; } = default!;
+        public DbSet<OSP.Models.Firefighter> Firefighter { get; set; }
 
         public DbSet<OSP.Models.Drive>? Drive { get; set; }
 
@@ -22,6 +22,7 @@ namespace OSP.Data
 
         public DbSet<OSP.Models.Car>? Car { get; set; }
 
-        public DbSet<OSP.Models.CarInAction>? CarInAction { get; set; }
+        public DbSet<OSP.Models.Crew>? Crew { get; set; }
+
     }
 }
